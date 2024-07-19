@@ -26,3 +26,4 @@ async def without_puree(message: types.Message):
         # booksCount = mongo.getCountBooks() # TODO CONNECT MONGODB
         content = f"Все юзеры: {all_users}, за сегодня рег: {reg_today}"
         await message.answer(str(content), reply_markup=keyboard)
+ 
