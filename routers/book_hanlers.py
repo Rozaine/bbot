@@ -25,10 +25,13 @@ async def without_puree(message: types.Message, state: FSMContext):
 async def book_chosen(message: Message, state: FSMContext):
     await state.update_data(chosen_book=message.text.lower())
     user_data = await state.get_data()
-    item_count_page = 5
+    item_count_page = 12
     books_searched = mongo_database.searchBooks(user_data["chosen_book"])
 
     page_count = round(len(books_searched) / item_count_page)
+
+    if round(len(books_searched) / item_count_page) == 0:
+        page_count = 1
 
     def func_chunks_generators(lst, n):
         if len(lst) == 0:
@@ -52,14 +55,15 @@ async def book_chosen(message: Message, state: FSMContext):
 @router.callback_query(common_keyboards.Pagination.filter(F.action.in_(["prev", "next"])))
 async def pagination_handler(call: CallbackQuery, callback_data: common_keyboards.Pagination, state: FSMContext):
     user_data = await state.get_data()
-    item_count_page = 5
+    item_count_page = 12
     books_searched = mongo_database.searchBooks(user_data["chosen_book"])
 
     page_count = round(len(books_searched) / item_count_page)
 
     def func_chunks_generators(lst, n):
-        for i in range(0, len(lst), n):
-            yield lst[i: i + n]
+        if len(lst) > 1:
+            for i in range(0, len(lst), n):
+                yield lst[i: i + n]
 
     pages_inline_items = list(func_chunks_generators(books_searched, item_count_page))
     page_num = int(callback_data.page)
@@ -72,9 +76,12 @@ async def pagination_handler(call: CallbackQuery, callback_data: common_keyboard
         page = page_num - 1 if page_num - 1 > 0 else page_num
 
     with suppress(TelegramBadRequest):
-        await call.message.edit_reply_markup(
-            reply_markup=common_keyboards.bookKb(pages_inline_items[page], page_count, page)
-        )
+        try:
+            await call.message.edit_reply_markup(
+                reply_markup=common_keyboards.bookKb(pages_inline_items[page], page_count, page)
+            )
+        except IndexError:
+            pass
     await call.answer()
 
 
