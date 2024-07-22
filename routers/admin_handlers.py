@@ -1,9 +1,7 @@
 from aiogram import types, F, Router
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
 
 import config
-from openAIUtil import get_embedding
 from keyboards import common_keyboards
 from databaseUtil import common as sql, mongo_database as mongo
 
@@ -26,4 +24,9 @@ async def without_puree(message: types.Message):
         # booksCount = mongo.getCountBooks() # TODO CONNECT MONGODB
         content = f"Все юзеры: {all_users}, за сегодня рег: {reg_today}"
         await message.answer(str(content), reply_markup=keyboard)
- 
+
+
+@router.message(F.text.lower() == "Сделать рассылку")
+async def make_newsletter():
+    adminID = config.ADMIN_ID
+    await router.send

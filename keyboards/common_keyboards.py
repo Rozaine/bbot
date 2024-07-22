@@ -8,7 +8,7 @@ main_kb = [
 ]
 
 admin_kb = [
-    [KeyboardButton(text="Ban/unban")],
+    [KeyboardButton(text="Ban/unban"), KeyboardButton(text="Сделать рассылку")],
     [KeyboardButton(text="Статистика"), KeyboardButton(text="Отправить рассылку")],
 ]
 
