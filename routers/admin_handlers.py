@@ -1,9 +1,13 @@
 from aiogram import types, F, Router
+from aiogram.enums import ParseMode
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
 
 import config
 from keyboards import common_keyboards
 from databaseUtil import common as sql, mongo_database as mongo
+
+from .states import CreateMessage
 
 router = Router()
 
@@ -26,7 +30,8 @@ async def without_puree(message: types.Message):
         await message.answer(str(content), reply_markup=keyboard)
 
 
-@router.message(F.text.lower() == "Сделать рассылку")
-async def make_newsletter():
+@router.message(F.text.lower() == "отправить рассылку")
+async def make_newsletter(message: types.Message, state: FSMContext):
     adminID = config.ADMIN_ID
-    await router.send
+    await message.answer('Send message text', parse_mode=ParseMode.MARKDOWN)
+    await state.set_state(CreateMessage.get_text)
