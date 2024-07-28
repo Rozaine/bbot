@@ -1,7 +1,6 @@
 from aiogram import types, F, Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.types.input_file import FSInputFile
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from contextlib import suppress
 from aiogram.exceptions import TelegramBadRequest
@@ -10,17 +9,9 @@ from aiogram.utils.formatting import Text, Bold
 from databaseUtil import mongo_database
 from keyboards import common_keyboards
 from openAIUtil import get_embedding
+from .states import OrderBook, PromtGPT
 
 router = Router()
-
-
-class PromtGPT(StatesGroup):
-    promt = State()
-
-
-class OrderBook(StatesGroup):
-    choosing_book_name = State()
-    choosing_book = State()
 
 
 @router.message(F.text.lower() == "начать поиск")
@@ -37,7 +28,7 @@ async def book_chosen(message: Message, state: FSMContext):
     item_count_page = 12
     books_searched = mongo_database.searchBooks(user_data["chosen_book"])
 
-    page_count = round(len(books_searched) / item_count_page)  # TODO if round(len(books_searched) / 12) > 0 else  page
+    page_count = round(len(books_searched) / item_count_page)
 
     if round(len(books_searched) / item_count_page) == 0:
         page_count = 1

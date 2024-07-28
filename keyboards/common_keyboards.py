@@ -1,6 +1,7 @@
 from aiogram.types import KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters.callback_data import CallbackData
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 main_kb = [
     [KeyboardButton(text="Начать поиск"), KeyboardButton(text="ChatGPT, посоветуй книгу")],
@@ -8,9 +9,18 @@ main_kb = [
 ]
 
 admin_kb = [
-    [KeyboardButton(text="Ban/unban")],
+    [KeyboardButton(text="Ban/unban"), KeyboardButton(text="Сделать рассылку")],
     [KeyboardButton(text="Статистика"), KeyboardButton(text="Отправить рассылку")],
 ]
+
+
+def get_kb_confirm() -> InlineKeyboardBuilder:
+    builder = InlineKeyboardBuilder()
+    builder.row(
+        InlineKeyboardButton(text='Send now', callback_data=f'start'),
+        InlineKeyboardButton(text='Stop', callback_data=f'stop')
+    )
+    return builder
 
 
 class Pagination(CallbackData, prefix="pag"):

@@ -9,9 +9,10 @@ from aiogram.fsm.storage.memory import MemoryStorage
 import config
 from routers import router as main_router
 
+bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
 
 async def main():
-    bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_routers(main_router)
     await bot.delete_webhook(drop_pending_updates=True)
