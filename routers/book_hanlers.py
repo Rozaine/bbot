@@ -93,7 +93,7 @@ async def download_handler(call: CallbackQuery, callback_data: common_keyboards.
     file = FSInputFile(book_path)
     sql.addDownload(user_id=call.from_user.id, book_name=book_path)
     await call.message.answer_document(file)
-    await call.answer(callback_data.action)
+    # await call.answer(callback_data.action)
 
 
 @router.message(F.text.lower() == "chatgpt, посоветуй книгу")
