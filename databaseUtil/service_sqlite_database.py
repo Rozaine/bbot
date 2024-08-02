@@ -13,5 +13,11 @@ def createDB():
                     last_msg_at TIMESTAMP NOT NULL)
                 """)
 
+    cursor.execute("""CREATE TABLE IF NOT EXISTS BooksDownloads
+                    (download_id INTEGER PRIMARY KEY,
+                    FOREIGN KEY (user_d)  REFERENCES Customers (Id),
+                    start_at TIMESTAMP NOT NULL)
+                """)
+
     connection.commit()
     connection.close()

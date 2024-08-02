@@ -1,4 +1,6 @@
 import sqlite3
+from datetime import datetime
+
 from .service_sqlite_database import createDB
 
 connection = sqlite3.connect('my_database.db')
@@ -12,8 +14,25 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS Users
                 last_msg_at TIMESTAMP NOT NULL)
             """)
 
+cursor.execute("""CREATE TABLE IF NOT EXISTS Downloads
+                (download_id INTEGER PRIMARY KEY,
+                time_download TIMESTAMP NOT NULL,
+                user_id INTEGER,
+                book_name TEXT,
+                FOREIGN KEY(user_id)  REFERENCES Users(user_telegram_id))
+            """)
+
 connection.commit()
 connection.close()
+
+
+def addDownloadBookToUser(time_download: datetime, user_id: int, book_name: str):
+    connection = sqlite3.connect('my_database.db')
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO Downloads (time_download, user_id, book_name) VALUES (?, ?, ?)',
+                   (time_download, user_id, book_name))
+    connection.commit()
+    connection.close()
 
 
 def getAllUsersCount():

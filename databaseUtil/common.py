@@ -8,6 +8,11 @@ def getCount():
     return len(list(mongo_database.getCountBooks()))
 
 
+def addDownload(user_id, book_name: str):
+    _current_dateTime = datetime.now()
+    sql_database.addDownloadBookToUser(_current_dateTime, user_id, book_name)
+
+
 def hasRegistered(msg):
     if sql_database.hasRegistered(msg.from_user.id) == []:
         return False

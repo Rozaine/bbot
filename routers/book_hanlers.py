@@ -10,6 +10,7 @@ from databaseUtil import mongo_database
 from keyboards import common_keyboards
 from openAIUtil import get_embedding
 from .states import OrderBook, PromtGPT
+from databaseUtil import common as sql
 
 router = Router()
 
@@ -90,6 +91,8 @@ async def download_handler(call: CallbackQuery, callback_data: common_keyboards.
     book_id = callback_data.action[2:]
     book_path = (mongo_database.getBookPathById(book_id)[0]['path'])
     file = FSInputFile(book_path)
+    # TODO add download string sql
+    sql.addDownload(user_id=call.from_user.id, book_name=book_path)
     await call.message.answer_document(file)
     await call.answer(callback_data.action)
 
