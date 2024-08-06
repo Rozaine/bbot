@@ -15,6 +15,12 @@ def hasRegistered(msg):
         return True
 
 
+def updateLastUserActivity(msg):
+    _chat_id = msg.from_user.id
+    _current_dateTime = datetime.now()
+    sql_database.updateLastUserActivitySql(_chat_id, _current_dateTime)
+
+
 def getTodayRegUsersCount():
     return sql_database.getTodayRegUsersCount()
 

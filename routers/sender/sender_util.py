@@ -29,32 +29,6 @@ def generate_kb(
     return btn_builder.as_markup()
 
 
-async def cancel_sending(callback: CallbackQuery, state: FSMContext):
-    await callback.message.edit_text('cancel_send_msg')
-    print('start')
-    await state.clear()
-    await callback.answer()
-
-
-async def start_sending(callback: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    await callback.message.answer('start_send_msg')
-    await state.clear()
-    await callback.answer()
-
-    user_id = [str(config.ADMIN_ID)]
-    t_start = time.time()
-    msg_id = data.get('message_id')
-    count = await start_sender(
-        bot=bot,
-        data=data,
-        user_id=user_id,
-        from_chat_id=callback.message.chat.id,
-        message_id=msg_id
-    )
-    await callback.message.answer(f'Sand {count}/{len(user_id)}: {round(time.time() - t_start)} s.')
-
-
 async def send_preview_with_kb(
         message,
         photo: str = None,
@@ -110,7 +84,6 @@ async def start_sender(
     keyboard = generate_kb(data["btn_text"], data["btn_url"])
     for i in user_id:
         if await send_mail(bot, i, from_chat_id, message_id, keyboard):
-            print(count)
             count += 1
         await asyncio.sleep(0.05)
     return count

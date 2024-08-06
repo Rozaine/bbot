@@ -35,6 +35,15 @@ def getTodayRegUsersCount():
     return user_count[0][0]
 
 
+def updateLastUserActivitySql(user_telegram_id, last_msg_at):
+    connection = sqlite3.connect('my_database.db')
+    cursor = connection.cursor()
+    cursor.execute('UPDATE Users SET last_msg_at = ? WHERE user_telegram_id = ?', (last_msg_at, user_telegram_id))
+    user = cursor.fetchall()
+    connection.commit()
+    connection.close()
+
+
 def hasRegistered(user_telegram_id):
     connection = sqlite3.connect('my_database.db')
     cursor = connection.cursor()

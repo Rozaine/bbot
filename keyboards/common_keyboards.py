@@ -14,18 +14,22 @@ admin_kb = [
 ]
 
 
-def get_kb_confirm() -> InlineKeyboardBuilder:
-    builder = InlineKeyboardBuilder()
-    builder.row(
-        InlineKeyboardButton(text='Send now', callback_data=f'start'),
-        InlineKeyboardButton(text='Stop', callback_data=f'stop')
-    )
-    return builder
-
-
 class Pagination(CallbackData, prefix="pag"):
     action: str
     page: int
+
+
+class Maling(CallbackData, prefix="mail"):
+    action: str
+
+
+def get_kb_confirm() -> InlineKeyboardBuilder:
+    builder = InlineKeyboardBuilder()
+    builder.row(
+        InlineKeyboardButton(text='Send now', callback_data=Maling(action='start').pack()),
+        InlineKeyboardButton(text='Stop', callback_data=Maling(action='stop').pack())
+    )
+    return builder
 
 
 def bookKb(book_list: list, pages_value: int, page: int) -> InlineKeyboardMarkup:

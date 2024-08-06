@@ -6,7 +6,7 @@ from contextlib import suppress
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.utils.formatting import Text, Bold
 
-from databaseUtil import mongo_database
+from databaseUtil import mongo_database, common as sql
 from keyboards import common_keyboards
 from openAIUtil import get_embedding
 from .states import OrderBook, PromtGPT
@@ -16,6 +16,7 @@ router = Router()
 
 @router.message(F.text.lower() == "начать поиск")
 async def without_puree(message: types.Message, state: FSMContext):
+    sql.updateLastUserActivity(message)
     await state.update_data(chosen_book=message.text.lower())
     await message.answer("Введите название книги или автора в любом удобном формате.")
     await state.set_state(OrderBook.choosing_book_name)
