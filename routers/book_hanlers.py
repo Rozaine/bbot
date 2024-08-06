@@ -1,4 +1,5 @@
 from aiogram import types, F, Router
+from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 from aiogram.types.input_file import FSInputFile
 from aiogram.fsm.context import FSMContext
@@ -11,6 +12,7 @@ from keyboards import common_keyboards
 from openAIUtil import get_embedding
 from .states import OrderBook, PromtGPT
 from databaseUtil import common as sql
+from filters.chat_type import ChatTypeFilter
 
 router = Router()
 
@@ -18,6 +20,24 @@ router = Router()
 @router.message(F.text.lower() == "начать поиск")
 async def without_puree(message: types.Message, state: FSMContext):
     sql.updateLastUserActivity(message)
+    await state.update_data(chosen_book=message.text.lower())
+    await message.answer("Введите название книги или автора в любом удобном формате. \n Например: Гоголь")
+    await state.set_state(OrderBook.choosing_book_name)
+
+
+@router.message(Command("start_search"), ChatTypeFilter(chat_type=["group", "supergroup"]))  # TODO DEF FOR SEARCH
+async def without_puree(message: types.Message, state: FSMContext):
+    sql.updateLastUserActivity(message)
+    print(message)
+    await state.update_data(chosen_book=message.text.lower())
+    await message.answer("Введите название книги или автора в любом удобном формате.")
+    await state.set_state(OrderBook.choosing_book_name)
+
+
+@router.message(Command("start_search"))
+async def without_puree(message: types.Message, state: FSMContext):
+    sql.updateLastUserActivity(message)
+    print(message)
     await state.update_data(chosen_book=message.text.lower())
     await message.answer("Введите название книги или автора в любом удобном формате.")
     await state.set_state(OrderBook.choosing_book_name)
@@ -98,6 +118,14 @@ async def download_handler(call: CallbackQuery, callback_data: common_keyboards.
 
 
 @router.message(F.text.lower() == "chatgpt, посоветуй книгу")
+async def without_puree(message: types.Message, state: FSMContext):
+    await state.update_data(promt=message.text.lower())
+    await message.answer("Опишите какую книгу вы бы хотели чтобы я вам посоветовал. "
+                         "Функция может работать нестабильно.")
+    await state.set_state(PromtGPT.promt)
+
+
+@router.message(Command("get_recommendation"))
 async def without_puree(message: types.Message, state: FSMContext):
     await state.update_data(promt=message.text.lower())
     await message.answer("Опишите какую книгу вы бы хотели чтобы я вам посоветовал. "
