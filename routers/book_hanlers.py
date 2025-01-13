@@ -17,11 +17,11 @@ from filters.chat_type import ChatTypeFilter
 router = Router()
 
 
-@router.message(F.text.lower() == "начать поиск")
+@router.message(F.text.lower() == "🔍 начать поиск")
 async def without_puree(message: types.Message, state: FSMContext):
     sql.updateLastUserActivity(message)
     await state.update_data(chosen_book=message.text.lower())
-    await message.answer("Введите название книги или автора в любом удобном формате. \n Например: Гоголь")
+    await message.answer("🔍 Введите название книги или автора в любом удобном формате.")
     await state.set_state(OrderBook.choosing_book_name)
 
 
@@ -30,7 +30,7 @@ async def without_puree(message: types.Message, state: FSMContext):
     sql.updateLastUserActivity(message)
     print(message)
     await state.update_data(chosen_book=message.text.lower())
-    await message.answer("Введите название книги или автора в любом удобном формате.")
+    await message.answer("🔍 Введите название книги или автора в любом удобном формате.")
     await state.set_state(OrderBook.choosing_book_name)
 
 
@@ -39,7 +39,7 @@ async def without_puree(message: types.Message, state: FSMContext):
     sql.updateLastUserActivity(message)
     print(message)
     await state.update_data(chosen_book=message.text.lower())
-    await message.answer("Введите название книги или автора в любом удобном формате.")
+    await message.answer("🔍 Введите название книги или автора в любом удобном формате.")
     await state.set_state(OrderBook.choosing_book_name)
 
 
@@ -69,7 +69,7 @@ async def book_chosen(message: Message, state: FSMContext):
         await message.answer("Выберете нужную книгу:",
                              reply_markup=common_keyboards.bookKb(pages_inline_items[0], page_count, page))
     except IndexError:
-        await message.answer("Прошу прощения. Не нашел эту книгу.")
+        await message.answer("❌ Прошу прощения, не нашел эту книгу.")
 
     await state.set_state(OrderBook.choosing_book)
 

@@ -4,7 +4,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 main_kb = [
-    [KeyboardButton(text="Начать поиск"), KeyboardButton(text="ChatGPT, посоветуй книгу")],
+    [KeyboardButton(text="🔍 Начать поиск")],
     # [KeyboardButton(text="Случайная книга"), KeyboardButton(text="Без рекламы")],
 ]
 

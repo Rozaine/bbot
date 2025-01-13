@@ -16,28 +16,28 @@ async def start_handler(msg: Message):
         sql.updateLastUserActivity(msg)
     else:
         sql.registerUser(msg)
-    await msg.answer("Привет! Я помогу тебе найти книги, чтобы начать нажми кнопку 'Начать поиск'.",
+    await msg.answer(f"Рад вас видеть, {msg.from_user.username}!\nЧтобы найти книгу нажмите 🔍 Начать поиск",
                      reply_markup=keyboard)
 
 
-@router.message(Command("help"))
-async def start_handler(msg: Message):
-    sql.updateLastUserActivity(msg)
-    keyboard = types.ReplyKeyboardMarkup(keyboard=main_kb, resize_keyboard=True)
-    await msg.answer("По любым вопросам: @roza1ne", reply_markup=keyboard)
+# @router.message(Command("help"))
+# async def start_handler(msg: Message):
+#     sql.updateLastUserActivity(msg)
+#     keyboard = types.ReplyKeyboardMarkup(keyboard=main_kb, resize_keyboard=True)
+#     await msg.answer("По любым вопросам: @roza1ne", reply_markup=keyboard)
 
 
-@router.message(F.text.lower() == "случайная книга")
-async def without_puree(message: types.Message):
-    await message.answer("Пока что не доступно - в работе")
-
-
-@router.message(F.text.lower() == "без рекламы")
-async def without_puree(message: types.Message):
-    await message.answer("Пока что не доступно - в работе")
+# @router.message(F.text.lower() == "случайная книга")
+# async def without_puree(message: types.Message):
+#     await message.answer("Пока что не доступно - в работе")
+#
+#
+# @router.message(F.text.lower() == "без рекламы")
+# async def without_puree(message: types.Message):
+#     await message.answer("Пока что не доступно - в работе")
 
 
 @router.message()
 async def message_handler(msg: Message):
     sql.updateLastUserActivity(msg)
-    await msg.answer(f"Не понял команду, воспользуйся /help")
+    await msg.answer(f"Не понял команду")
