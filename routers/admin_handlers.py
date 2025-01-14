@@ -32,6 +32,7 @@ async def without_puree(message: types.Message):
 
 @router.message(F.text.lower() == "отправить рассылку")
 async def make_newsletter(message: types.Message, state: FSMContext):
-    adminID = config.ADMIN_ID
-    await message.answer('Send message text', parse_mode=ParseMode.MARKDOWN)
-    await state.set_state(CreateMessage.get_text)
+    adminID = int(config.ADMIN_ID)
+    if adminID == message.from_user.id:
+        await message.answer('Send message text', parse_mode=ParseMode.MARKDOWN)
+        await state.set_state(CreateMessage.get_text)
